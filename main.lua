@@ -1,3 +1,10 @@
+
+--- TEST FILE
+local GlassBlock = require("GlassBlock")
+
+
+
+
 -------------------------------------------------
 ----- Debug
 -------------------------------------------------
@@ -363,6 +370,9 @@ Block = {
 -------------------------------------------------
 function love.load()
 	
+  GlassBlock.GlassPrint();
+  
+  
 	-- Init Board
 	Board.SetX( 430 );
 	Board.SetY( 550 );
@@ -372,9 +382,9 @@ function love.load()
   
   -- Init Ball
 	Ball.SetX( Board.GetX() + Board.GetWidth() * 0.5 );
-	Ball.SetY( Board.GetY() - Board.GetHeight() );
+	Ball.SetY( Board.GetY() );
 	Ball.SetXDirection( 250 );
-	Ball.SetYDirection( 250 );
+	Ball.SetYDirection( -250 );
   Ball.SetRadius( 5 );
   
   -- Init Blocks
@@ -403,6 +413,7 @@ end
 
 
 function love.update( dt )
+  
 	Ball.Update( dt );
   Board.Update( dt );
   HandleInput();
