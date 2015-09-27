@@ -1,4 +1,4 @@
 # LuaBreakout
 Simple Breakout game made in Love2D with Lua 
 
-![](http://imgur.com/4M8NQmi)
+![alt tag](http://i.imgur.com/TbQ25Aa.jpg)
