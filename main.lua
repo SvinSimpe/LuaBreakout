@@ -14,6 +14,8 @@ color_DEAD    = { 255, 0, 0 }
 -------------------------------------------------
 Background = {}
 Background.image = love.graphics.newImage( "background2.png" );
+
+Background.music = love.audio.newSource( "soundtrack.mp3" );
 -------------------------------------------------
 
 
@@ -84,9 +86,18 @@ end
 Ball.CheckCollision = function()
   
   -- Check collision with Board
-  if Ball.y + Ball.radius > Board.GetY() and        -- Ball.y is larger than Board.y
-     Ball.x + Ball.radius > Board.GetX() and        -- Ball.x is larger than Board.x
-     Ball.x  < Board.GetX() + Board.GetWidth() then -- Ball.x is less than Board.x
+  
+  if Ball.GetY() < Board.GetY() + Board.GetHeight()     and
+     Ball.GetY() + Ball.GetRadius() > Board.GetY()  and
+     Ball.GetX() < Board.GetX() + Board.GetWidth()      and
+     Ball.GetX() + Ball.GetRadius() > Board.GetX() then
+  
+  
+  
+  
+--  if Ball.y + Ball.radius > Board.GetY() and        -- Ball.y is larger than Board.y
+--     Ball.x + Ball.radius > Board.GetX() and        -- Ball.x is larger than Board.x
+--     Ball.x  < Board.GetX() + Board.GetWidth() then -- Ball.x is less than Board.x
         newYDirection = Ball.GetYDirection() * (-1);
         Ball.SetYDirection( newYDirection );
         if isSoundActivated then
@@ -100,6 +111,7 @@ end
 
 	-- Check Bottom
 	if Ball.GetY() > 600 then
+   -- love.event.quit( )
 		newYDirection = Ball.GetYDirection() * (-1);
     Ball.SetYDirection( newYDirection );
   
@@ -118,6 +130,7 @@ end
 	
 	-- Check Right
 	if Ball.GetX() + Ball.GetRadius() > 960 then
+    Ball.SetX( 960 - Ball.GetRadius() );
 		newXDirection = Ball.GetXDirection() * (-1);
     Ball.SetXDirection( newXDirection );
     if isSoundActivated then
@@ -125,7 +138,7 @@ end
     end
 		
 		-- Check Left
-		else if Ball.GetX() < 0 then
+		else if Ball.GetX() * 2 < 0 then
 			newXDirection = Ball.GetXDirection() * (-1);
       Ball.SetXDirection( newXDirection );
       if isSoundActivated then
@@ -305,19 +318,11 @@ Block = {
     end
   end
   
-  function Block:CheckDead()
+  function Block:CheckDead() 
     if self.current_state == Block.state[1] then
-      print( "BLOCK IS DEAD" );
+      return true;
     end  
-    
---    for i = 1, #AllBlocks do
-    
---      if AllBlocks[i] == nil then
---        table.remove( AllBlocks[i] );
---      end  
---    end
-    
-    
+       
   end
    
   function Block:New()
@@ -332,10 +337,10 @@ Block = {
   end
   
   
-  function CheckBlockCollision()
+  function CheckBlock1Collision()
   
     
-    for i = 1, #AllBlocks do
+    for i = 1, num_blocks do
       
       if AllBlocks[i] == nil then return end -- Check if Block exists
       
@@ -347,16 +352,9 @@ Block = {
           AllBlocks[i]:ChangeState();
           AllBlocks[i]:CheckDead();
           newYDirection = Ball.GetYDirection() * (-1);
-          Ball.SetYDirection( newYDirection );
-        
-          print( "HIT", Ball.GetYDirection() );
-        
-        
-      end
-      
-    end
-    
-  
+          Ball.SetYDirection( newYDirection );       
+      end      
+    end 
   end
   
 
@@ -365,43 +363,42 @@ Block = {
 -------------------------------------------------
 function love.load()
 	
-	-- Init Ball
-	Ball.SetX( 250 );
-	Ball.SetY( 250 );
-	Ball.SetXDirection( 250 );
-	Ball.SetYDirection( 250 );
-  Ball.SetRadius( 5 );
-	
 	-- Init Board
-	Board.SetX( 300 );
+	Board.SetX( 430 );
 	Board.SetY( 550 );
 	Board.SetWidth( 60 );   --Default 60  
 	Board.SetHeight( 10 );  --Default 10
 	Board.SetSpeed( 10 );
   
+  -- Init Ball
+	Ball.SetX( Board.GetX() + Board.GetWidth() * 0.5 );
+	Ball.SetY( Board.GetY() - Board.GetHeight() );
+	Ball.SetXDirection( 250 );
+	Ball.SetYDirection( 250 );
+  Ball.SetRadius( 5 );
+  
   -- Init Blocks
   AllBlocks = {}
   
   
-  xPos = 5;
+  xPos = 6;
   yPos = 10;
   
   counter = 1;
-  for i = 1, 4 do
-    for j = 1, 10 do     
+  for i = 1, 8 do
+    for j = 1, 9 do     
       newBlock = Block:New();             -- Create new Block
-      newBlock:SetX( xPos + 100 * (j-1) ); -- Set X coordinate
-      newBlock:SetY( yPos + 40 * (i-1) ); -- Set Y coordinate
-      newBlock:SetWidth( 95 );            -- Set width
+      newBlock:SetX( xPos + 106 * (j-1) ); -- Set X coordinate
+      newBlock:SetY( yPos + 25 * (i-1) ); -- Set Y coordinate
+      newBlock:SetWidth( 100 );            -- Set width
       newBlock:SetHeight( 20 );           -- Set height
       
       AllBlocks[counter] = newBlock;      -- Add new Block to table
       counter = counter + 1;              -- Increment counter
     end
   end
-  
-
-	
+    
+  love.audio.play( Background.music );
 end
 
 
@@ -435,16 +432,44 @@ function love.draw()
       R = love.math.random( 255 );
       G = love.math.random( 255 );
       B = love.math.random( 255 );
-      love.graphics.setColor( R, G, B );
+      --love.graphics.setColor( R, G, B );
       love.graphics.setColor( AllBlocks[i].color );
-      -- Place on screen as a 2D matrix
-      love.graphics.rectangle( "line", AllBlocks[i]:GetX(), AllBlocks[i]:GetY(), AllBlocks[i]:GetWidth(), AllBlocks[i]:GetHeight() );
+      
+      -- Place on screen as a 2D matrix 
+      love.graphics.rectangle( "fill", AllBlocks[i]:GetX(), AllBlocks[i]:GetY(), AllBlocks[i]:GetWidth(), AllBlocks[i]:GetHeight() );
   end
   
 end
 -------------------------------------------------
 ----- Other
 -------------------------------------------------
+
+
+function CheckBlockCollision()
+  
+  -- Iterate AllBlocks and check intersect with Ball
+ -- for i = , #AllBlocks do
+  for i, block in pairs( AllBlocks ) do
+    
+    -- Check Ball top VS Block Bottom
+    if Ball.GetY() < block:GetY() + block:GetHeight() and
+       Ball.GetY() + Ball.GetRadius() * 4 > block:GetY() and
+       Ball.GetX() < block:GetX() + block:GetWidth() and
+       Ball.GetX() + Ball.GetRadius() * 4 > block:GetX() then
+         
+         -- We have a hit!
+          block:ChangeState();
+          
+          -- Remove if Block is dead
+          if block:CheckDead() then     
+              table.remove( AllBlocks, i );
+          end
+          
+          newYDirection = Ball.GetYDirection() * (-1);
+          Ball.SetYDirection( newYDirection );
+    end      
+  end
+end
 
 function HandleInput()
   
