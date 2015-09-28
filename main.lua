@@ -1,9 +1,13 @@
 
---- TEST FILE
-local GlassBlock = require("GlassBlock")
+local DropManager = require( "DropManager" );
+
+local GlassBlock = require( "GlassBlock" );
 
 
+local Vector2 = require( "Vector2" );
 
+Vector2.x = 99;
+Vector2.y = 100;
 
 -------------------------------------------------
 ----- Debug
@@ -22,7 +26,7 @@ color_DEAD    = { 255, 0, 0 }
 Background = {}
 Background.image = love.graphics.newImage( "background2.png" );
 
-Background.music = love.audio.newSource( "soundtrack.mp3" );
+Background.music = love.audio.newSource( "Sound/soundtrack.mp3" );
 -------------------------------------------------
 
 
@@ -38,7 +42,7 @@ Ball.y          = 0;
 Ball.xDirection = 0;
 Ball.yDirection = 0;
 Ball.radius     = 0;
-Ball.wall_bounce_sound = love.audio.newSource( "wall_sound.wav" );
+Ball.wall_bounce_sound = love.audio.newSource( "Sound/wall_sound.wav" );
 
 
 -- Methods
@@ -171,7 +175,7 @@ Board.y			  = 0;
 Board.width		= 0;	
 Board.height	= 0;
 Board.speed 	= 0;
-Board.bounce_sound  = love.audio.newSource( "board_bounce_sound.wav" );
+Board.bounce_sound  = love.audio.newSource( "Sound/board_bounce_sound.wav" );
   
 -- Methods 
 Board.GetX = function()
@@ -261,9 +265,9 @@ Block = {
   current_state = nil;
   color = color_FULL;
   
-  damaged_sound = love.audio.newSource( "block_damaged_sound.wav" ),
-  broken_sound = love.audio.newSource( "block_broken_sound.wav" ),
-  dead_sound = love.audio.newSource( "block_dead_sound.wav" ),
+  damaged_sound = love.audio.newSource( "Sound/block_damaged_sound.wav" ),
+  broken_sound = love.audio.newSource( "Sound/block_broken_sound.wav" ),
+  dead_sound = love.audio.newSource( "Sound/block_dead_sound.wav" ),
   
 }
   
@@ -370,7 +374,7 @@ Block = {
 -------------------------------------------------
 function love.load()
 	
-  GlassBlock.GlassPrint();
+  Vector2:ToString();
   
   
 	-- Init Board
