@@ -1,5 +1,7 @@
+local AssetManagerRef  = require( "AssetManager" );
+local Vector2           = require( "Vector2" );
 
-local Vector2 = require( "Vector2" );
+AssetManagerRef:LoadAssets();
 
 -------------------------------------------------
 ----- Block
@@ -10,6 +12,7 @@ Block = {
   width           = 0;    -- Width of the block
   height          = 0;    -- Height of the block
   score_per_hit   = 0;    -- Amount of score per hit
+  current_image   = nil;  -- Current image used
   
   
   item_drop   = nil;  -- Item drop type, nil if no item will drop
@@ -18,6 +21,8 @@ Block = {
   
   BlockTypes  = { "GlassBlock" };  -- Enumerations of Block types
   block_type  = nil;               -- The type of Block, must be one of BlockTypes(!)
+
+  AssetManager  = AssetManagerRef;  -- Reference to AssetManager
 
 };
 
@@ -30,11 +35,7 @@ function Block:New()
   self.__index = self;
     
   return newBlock;
-end
 
-
-function Block:ToString()
-  print( "X: " .. self.position:GetX(), "Y: " .. self.position:GetY(), "score_per_hit: " .. self.score_per_hit, "drop_chance: " .. self.drop_chance, "num_hits: " .. self.num_hits );
 end
 
 
@@ -66,18 +67,16 @@ function Block:GetNumHits()
   return self.num_hits;
 end
 
-function Block:SetPosition( newPosition )
-  
-  print( "In Block:SetPosition( newPosition ): " .. newPosition:GetX(), newPosition:GetY() )
-  
-  --self.position = newPosition;
-  
+function Block:GetImage() -- Returns the current image
+    return self.current_image;
+end
+
+function Block:SetPosition( newPosition ) 
   self.position:SetX( newPosition:GetX() );
   self.position:SetY( newPosition:GetY() );
 end
 
 function Block:SetWidth( newWidth )
-  print( "In Block:SetWidth:", "newWidth:" .. newWidth );
   self.width = newWidth;
 end
 

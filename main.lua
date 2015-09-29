@@ -1,22 +1,15 @@
 
-local DropManager = require( "DropManager" );
 
-local BlockManager = require( "BlockManager" );
-
-local Vector2 = require( "Vector2" );
-
-Vector2.x = 99;
-Vector2.y = 100;
+local BlockManager  = require( "BlockManager" );
+local AssetManager  = require( "AssetManager" );
+local DropManager   = require( "DropManager" );
+local Vector2       = require( "Vector2" );
 
 -------------------------------------------------
 ----- Debug
 -------------------------------------------------
 isSoundActivated = true;
 
-color_FULL    = { 255, 255, 255 }
-color_DAMAGED = { 255, 150, 155 }
-color_BROKEN  = { 255, 50, 50 }
-color_DEAD    = { 255, 0, 0 }
 
 
 -------------------------------------------------
@@ -463,11 +456,12 @@ function love.draw()
       R = love.math.random( 255 );
       G = love.math.random( 255 );
       B = love.math.random( 255 );
-      love.graphics.setColor( R, G, B );
-      --love.graphics.setColor( AllBlocks[i].color );
+      --love.graphics.setColor( R, G, B );
+      love.graphics.setColor( 255, 255, 255 );
       
       -- Place on screen as a 2D matrix 
-      love.graphics.rectangle( "fill", AllBlocks[i]:GetX(), AllBlocks[i]:GetY(), AllBlocks[i]:GetWidth(), AllBlocks[i]:GetHeight() );
+      love.graphics.draw( AllBlocks[i]:GetImage(), AllBlocks[i]:GetX(), AllBlocks[i]:GetY() );
+      --love.graphics.rectangle( "fill", AllBlocks[i]:GetX(), AllBlocks[i]:GetY(), AllBlocks[i]:GetWidth(), AllBlocks[i]:GetHeight() );
   end
   
 end
