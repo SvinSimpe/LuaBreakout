@@ -363,18 +363,27 @@ Block = {
 -------------------------------------------------
 ----- Love2D
 -------------------------------------------------
-function love.load()
+function love.load( arg )
+  
+  if arg[#arg] == "-debug" then require("mobdebug").start() end
 
-  full_pattern = { 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+  full_pattern = { 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                   1, 1, 1, 1, 1, 1, 1, 1, 1,
+                   1, 1, 1, 1, 1, 1, 1, 1, 1,
+                   1, 0, 1, 1, 1, 1, 0, 1, 1,
+                   1, 1, 1, 1, 1, 1, 1, 1, 1,
+                   0, 1, 0, 1, 1, 1, 1, 1, 0,
+                   0, 0, 1, 1, 1, 1, 1, 0, 0,
+                   1, 0, 0, 0, 0, 0, 0, 0, 0 };
   
-  
+  full_pattern = { 1, 1, 1, 1, 1, 1, 1, 0, 1,
+                   1, 1, 1, 1, 1, 1, 0, 1, 1,
+                   1, 1, 1, 1, 1, 0, 1, 1, 1,
+                   1, 1, 1, 1, 0, 1, 1, 1, 1,
+                   1, 1, 1, 0, 1, 1, 1, 1, 1,
+                   1, 1, 0, 1, 1, 1, 1, 1, 1,
+                   1, 0, 1, 1, 1, 1, 1, 1, 1,
+                   0, 1, 1, 1, 1, 1, 1, 1, 0 };
   
   AllBlocksUpdated = BlockManager:GenerateBlocks( full_pattern );
 
@@ -395,24 +404,7 @@ function love.load()
   
   -- Init Blocks
   AllBlocks = {}
-  
-  
-  xPos = 6;
-  yPos = 10;
-  
-  counter = 1;
-  for i = 1, 8 do
-    for j = 1, 9 do     
-      newBlock = Block:New();             -- Create new Block
-      newBlock:SetX( xPos + 106 * (j-1) ); -- Set X coordinate
-      newBlock:SetY( yPos + 25 * (i-1) ); -- Set Y coordinate
-      newBlock:SetWidth( 100 );            -- Set width
-      newBlock:SetHeight( 20 );           -- Set height
-      
-      AllBlocks[counter] = newBlock;      -- Add new Block to table
-      counter = counter + 1;              -- Increment counter
-    end
-  end
+
     
   if isSoundActivated then
     love.audio.play( Background.music );
@@ -420,7 +412,7 @@ function love.load()
   
   
   AllBlocks = nil;
-  AllBlocks = AllBlocksUpdated;
+  AllBlocks = AllBlocksUpdated; 
   
 end
 
@@ -430,7 +422,7 @@ function love.update( dt )
 	Ball.Update( dt );
   Board.Update( dt );
   HandleInput();
-  CheckBlockCollision(); 
+  --CheckBlockCollision(); 
   
 end
 
@@ -452,16 +444,19 @@ function love.draw()
   yPos = 10;
   
   for i = 1, #AllBlocks do
-    -- Randomize color
+    
+    if( AllBlocks[i] ~= nil ) then
+      -- Randomize color
       R = love.math.random( 255 );
       G = love.math.random( 255 );
       B = love.math.random( 255 );
       --love.graphics.setColor( R, G, B );
       love.graphics.setColor( 255, 255, 255 );
-      
+        
       -- Place on screen as a 2D matrix 
       love.graphics.draw( AllBlocks[i]:GetImage(), AllBlocks[i]:GetX(), AllBlocks[i]:GetY() );
       --love.graphics.rectangle( "fill", AllBlocks[i]:GetX(), AllBlocks[i]:GetY(), AllBlocks[i]:GetWidth(), AllBlocks[i]:GetHeight() );
+    end     
   end
   
 end
@@ -472,32 +467,32 @@ end
 
 function CheckBlockCollision()
   
+  print( "In main -> CheckBlockCollision:", "#AllBlocks:" .. #AllBlocks );
+  
   -- Iterate AllBlocks and check intersect with Ball
   for i, block in pairs( AllBlocks ) do
     
-    -- Check Ball top VS Block Bottom
---    if Ball.GetY() < block:GetY() + block:GetHeight() and
---       Ball.GetY() + Ball.GetRadius() * 4 > block:GetPosition():GetY() and
---       Ball.GetX() < block:GetPosition():GetX() + block:GetWidth() and
---       Ball.GetX() + Ball.GetRadius() * 4 > block:GetPosition():GetX() then
-         
-         
+    if( AllBlocks[i] ~= nil ) then
+    
       if Ball.GetY() < block:GetY() + block:GetHeight() and
          Ball.GetY() + Ball.GetRadius() * 4 > block:GetY() and
          Ball.GetX() < block:GetX() + block:GetWidth() and
          Ball.GetX() + Ball.GetRadius() * 4 > block:GetX() then
+         
          -- We have a hit!
-          block:ChangeState();
+         block:ChangeState();
           
-          -- Remove if Block is dead
-          if block:CheckDead() then     
-              table.remove( AllBlocks, i );
-          end
+         -- Remove if Block is dead
+         if block:CheckDead() then     
+           table.remove( AllBlocks, i );
+         end
           
-          newYDirection = Ball.GetYDirection() * (-1);
-          Ball.SetYDirection( newYDirection );
-    end      
+         newYDirection = Ball.GetYDirection() * (-1);
+         Ball.SetYDirection( newYDirection );
+      end      
+    end
   end
+    
 end
 
 function HandleInput()
