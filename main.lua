@@ -1,8 +1,7 @@
 
 local DropManager = require( "DropManager" );
 
-local GlassBlock = require( "GlassBlock" );
-
+local BlockManager = require( "BlockManager" );
 
 local Vector2 = require( "Vector2" );
 
@@ -251,7 +250,6 @@ end
 --------------------------
 
 
-
 -------------------------------------------------
 ----- Block
 -------------------------------------------------
@@ -373,9 +371,20 @@ Block = {
 ----- Love2D
 -------------------------------------------------
 function love.load()
-	
-  Vector2:ToString();
+
+  full_pattern = { 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                 1, 1, 1, 1, 1, 1, 1, 1, 1 };
   
+  
+  
+  AllBlocksUpdated = BlockManager:GenerateBlocks( full_pattern );
+
   
 	-- Init Board
 	Board.SetX( 430 );
@@ -412,7 +421,14 @@ function love.load()
     end
   end
     
-  love.audio.play( Background.music );
+  if isSoundActivated then
+    love.audio.play( Background.music );
+  end
+  
+  
+  AllBlocks = nil;
+  AllBlocks = AllBlocksUpdated;
+  
 end
 
 
@@ -428,15 +444,15 @@ end
 function love.draw()
 	
   -- Draw Background
-  love.graphics.setColor(255, 255, 255);
+  love.graphics.setColor( 255, 255, 255 );
   love.graphics.draw( Background.image );
   
   -- Draw Ball
-	love.graphics.setColor(51, 204, 255);
-    love.graphics.circle("fill", Ball.GetX(), Ball.GetY(), Ball.GetRadius(), 100); -- Draw white circle with 100 segments.
+	love.graphics.setColor( 51, 204, 255 );
+    love.graphics.circle( "fill", Ball.GetX(), Ball.GetY(), Ball.GetRadius(), 100 ); -- Draw light blue circle with 100 segments.
 	
   -- Draw Board
-  love.graphics.setColor(255, 255, 102);
+  love.graphics.setColor( 255, 255, 102 );
   love.graphics.rectangle( "fill", Board.GetX(), Board.GetY(), Board.GetWidth(), Board.GetHeight() );
   
   xPos = 10;
@@ -447,8 +463,8 @@ function love.draw()
       R = love.math.random( 255 );
       G = love.math.random( 255 );
       B = love.math.random( 255 );
-      --love.graphics.setColor( R, G, B );
-      love.graphics.setColor( AllBlocks[i].color );
+      love.graphics.setColor( R, G, B );
+      --love.graphics.setColor( AllBlocks[i].color );
       
       -- Place on screen as a 2D matrix 
       love.graphics.rectangle( "fill", AllBlocks[i]:GetX(), AllBlocks[i]:GetY(), AllBlocks[i]:GetWidth(), AllBlocks[i]:GetHeight() );
@@ -463,15 +479,19 @@ end
 function CheckBlockCollision()
   
   -- Iterate AllBlocks and check intersect with Ball
- -- for i = , #AllBlocks do
   for i, block in pairs( AllBlocks ) do
     
     -- Check Ball top VS Block Bottom
-    if Ball.GetY() < block:GetY() + block:GetHeight() and
-       Ball.GetY() + Ball.GetRadius() * 4 > block:GetY() and
-       Ball.GetX() < block:GetX() + block:GetWidth() and
-       Ball.GetX() + Ball.GetRadius() * 4 > block:GetX() then
+--    if Ball.GetY() < block:GetY() + block:GetHeight() and
+--       Ball.GetY() + Ball.GetRadius() * 4 > block:GetPosition():GetY() and
+--       Ball.GetX() < block:GetPosition():GetX() + block:GetWidth() and
+--       Ball.GetX() + Ball.GetRadius() * 4 > block:GetPosition():GetX() then
          
+         
+      if Ball.GetY() < block:GetY() + block:GetHeight() and
+         Ball.GetY() + Ball.GetRadius() * 4 > block:GetY() and
+         Ball.GetX() < block:GetX() + block:GetWidth() and
+         Ball.GetX() + Ball.GetRadius() * 4 > block:GetX() then
          -- We have a hit!
           block:ChangeState();
           

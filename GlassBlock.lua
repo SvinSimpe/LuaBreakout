@@ -1,6 +1,10 @@
-local Block = require("Block")
 
+local Block   = require("Block")
+local Vector2 = require( "Vector2" );
 
+-------------------------------------------------
+----- GlassBlock : public Block
+-------------------------------------------------
 local GlassBlock = Block:New();
   
   GlassBlock.image_untouched = nil;  -- Image used when GlassBlock is untouched
@@ -10,29 +14,29 @@ local GlassBlock = Block:New();
   GlassBlock.current_image   = nil;  -- Current image used
  
 -- Constructor
-function GlassBlock:New( newX, newY, width, height )
+function GlassBlock:New( newPosition, newWidth, newHeight )
+    
+    --local newGlassBlock = {};
+    local newGlassBlock = Block:New();
 
-    local newGlassBlock = {};
+    setmetatable( newGlassBlock, Block ); -- TEST
+    --setmetatable( newGlassBlock, Block );
+  
+    newGlassBlock.position = newPosition;
+    newGlassBlock.width    = newWidth;
+    newGlassBlock.height   = newHeight;
     
-    setmetatable( newGlassBlock, Block );
+    return newGlassBlock;
     
-    
-    newGlassBlock.x            = newX;
-    newGlassBlock.y            = newY;
-    newGlassBlock.width        = width;
-    newGlassBlock.height       = height;
-    newGlassBlock.drop_chance  = 10;
+end
 
+function GlassBlock:LoadImages()
     
+    self.image_untouched = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched.png" );
+    self.image_damaged   = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockDamaged.png" );
+    self.image_broken    = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockBroken.png" );
     
-    -- GlassBlock methods
-    newItem.IsBall = function()
-      return isBall;
-    end
-    
-    
-    
-    return newItem;
+    self.current_image   = newGlassBlock.image_untouched;
     
 end
 
