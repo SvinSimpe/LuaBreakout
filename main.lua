@@ -510,5 +510,13 @@ function HandleInput()
   if love.keyboard.isDown( "escape" ) then
     love.event.quit( )
   end
-
+  
+  -- Check Mute
+  if love.keyboard.isDown( "m" ) and isSoundActivated then
+    isSoundActivated = false;
+  
+    else if love.keyboard.isDown( "m" ) and isSoundActivated == false then
+      isSoundActivated = true;
+    end
+  end
 end
