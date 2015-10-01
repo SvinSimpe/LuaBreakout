@@ -1,17 +1,32 @@
-
-
-
 local GlassBlock = require( "GlassBlock" );
-local Vector2     = require( "Vector2" );
+local Vector2    = require( "Vector2" );
+
 
 -------------------------------------------------
 ----- BlockManager
 -------------------------------------------------
-local BlockManager = {};
+local BlockManager = { NUM_BLOCKS_RESTRICTION = 72 };
 
-
+-- Methods
+--[[ Generate and returns a table of blocks according to the requested block pattern,
+     returns false if 'block_pattern' is 'nil' OR if 'block_pattern' is of incorrect size ]]
 function BlockManager:GenerateBlocks( block_pattern )
 
+  -- Incorrect request
+  if( block_pattern == nil ) then
+    print( "Error: Requested block_pattern not allowed to be 'nil' when calling BlockManager:GenerateBlocks( block_pattern )" );
+    return false;
+  end
+  
+  
+  -- Incorrect request
+  if( #block_pattern ~= self.NUM_BLOCKS_RESTRICTION ) then
+    print( "Error: Requested block_pattern size must be " .. self.NUM_BLOCKS_RESTRICTION .. " when calling BlockManager:GenerateBlocks( block_pattern )" );
+    return false;
+  end
+  
+  
+  print( "In BlockManager -> Filling BlockContainer..." );
   local  BlockContainer = {};
 
   local xStart = 6;   -- X start position on screen
@@ -26,23 +41,21 @@ function BlockManager:GenerateBlocks( block_pattern )
       local pos = Vector2:New( xCoord, yCoord );
       local newBlock = {};
     
-      
-      if block_pattern[counter] == 0 then -- No Block
-        print( "block_pattern[" .. counter .."]" .. " is: ", block_pattern[counter] );
-        -- Do nothing
+      -- No Block
+      if block_pattern[counter] == 0 then 
+        -- No block will created
         BlockContainer[counter] = nil;
 
 
+      -- Create new GlassBlock
       else if block_pattern[counter] == 1 then        
-          newBlock = GlassBlock:New( pos, 100, 20 );     -- Create new GlassBlock
-          print( "block_pattern[" .. counter .."]" .. " is: ", block_pattern[counter], "and performing assignment" );  
-          table.insert( BlockContainer, newBlock ); -- Add new Block to table
+        newBlock = GlassBlock:New( pos, 100, 20, 9, 3 );     
+        table.insert( BlockContainer, newBlock ); -- Add new Block to table
           
-          print( "In BlockManager -> #BlockContainer is: " .. #BlockContainer );
       end
       end
       
-      counter = counter + 1;              -- Increment counter
+      counter = counter + 1;
       
     end
   end

@@ -1,19 +1,35 @@
 
 
+
+
+-------------------------------------------------
+----- AssetManager
+-------------------------------------------------
 local AssetManager = {
-  
-  AssetTypes = { "GlassBlock_Untouched", "GlassBlock_Damaged", "GlassBlock_Broken" };
+  -- Fields
+  AssetTypes = { "Background_DesertNight", "GlassBlock_Untouched", "GlassBlock_Damaged", "GlassBlock_Broken" };
   Assets     = {};
   
 };
 
+-- Methods
 function AssetManager:LoadAssets()
+    
+    -- Load Background assets
+    print( "---------------------------------------------------------------" )
+    print( "In AssetManager -> Loading Background assets..." );
+    self.Assets[1] = love.graphics.newImage( "Art/Backgrounds/DesertNight.png" );
+    print( "In AssetManager -> Loading Background assets complete!" );
+    print( "---------------------------------------------------------------" )
+    
+    
+    
     -- Load GlassBlock assets
     print( "---------------------------------------------------------------" )
     print( "In AssetManager -> Loading GlassBlock assets..." );
-    self.Assets[1] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched.png" );
-    self.Assets[2] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockDamaged.png" );
-    self.Assets[3] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockBroken.png" );
+    self.Assets[2] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched.png" );
+    self.Assets[3] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockDamaged.png" );
+    self.Assets[4] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockBroken.png" );
     print( "In AssetManager -> Loading GlassBlock assets complete!" );
     print( "---------------------------------------------------------------" )
 end

@@ -1,6 +1,5 @@
 local AssetManagerRef  = require( "AssetManager" );
 local Vector2           = require( "Vector2" );
-
 AssetManagerRef:LoadAssets();
 
 -------------------------------------------------
@@ -15,12 +14,18 @@ Block = {
   current_image   = nil;  -- Current image used
   
   
-  item_drop   = nil;  -- Item drop type, nil if no item will drop
-  num_hits    = 0;    -- The maximum # of hits a block can take
+  item_drop             = nil;  -- Item drop type, nil if no item will drop
+  max_health              = 0;  -- The maximum # of hits a block can take
+  current_health          = 0;  -- The current health of a block 
+  num_states              = 0;  -- The # of states of a block 
+  change_factor           = 0;  -- The # of hits a block can take per state
   
   
   BlockTypes  = { "GlassBlock" };  -- Enumerations of Block types
   block_type  = nil;               -- The type of Block, must be one of BlockTypes(!)
+
+  BlockStates = { Untouched = "Untouched", Damaged = "Damaged", Broken = "Broken", Destroyed = "Destroyed"  }; -- Enumeration of Block states
+  current_state = nil;
 
   AssetManager  = AssetManagerRef;  -- Reference to AssetManager
 

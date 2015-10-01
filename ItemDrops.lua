@@ -1,10 +1,13 @@
+
 local Vector2 = require( "Vector2" );
+
 
 -------------------------------------------------
 ----- BaseDrop
 -------------------------------------------------
 local BaseDrop = {
   
+  -- Fields
   position    = Vector2:New( 0, 0 );  -- Position (x,y) of the ItemDrop
   width       = 0;    -- Width of the item
   height      = 0;    -- Heigth of the item
@@ -16,6 +19,8 @@ local BaseDrop = {
   DropChancePerItem = { 10, 10, 5, 5 }
 };
 
+
+-- Methods
 function BaseDrop:New()
     newDrop = {};
     
