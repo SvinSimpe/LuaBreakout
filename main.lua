@@ -9,16 +9,13 @@ local Board         = require( "Board" );
 local Ball          = require( "Ball" );
 
 
+local Toggle_Debug = false;
+
 -------------------------------------------------
 ----- Love2D
 -------------------------------------------------
 function love.load( arg )
-  
-  
- 
-  
-  
-  
+
   if arg[#arg] == "-debug" then require("mobdebug").start() end
 
   full_pattern = { 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -45,7 +42,7 @@ function love.load( arg )
   
   -- Init Ball
   Ball:Init( Vector2:New( Board:GetX() + Board:GetWidth() * 0.5, Board:GetY() ),
-             Vector2:New( math.cos( math.rad( 0 ) ), math.sin( math.rad( -90 ) ) ), 100, 5 );
+             Vector2:New( math.cos( math.rad( 0 ) ), math.sin( math.rad( -90 ) ) ), 400, 5 );
   
   -- Init Blocks
   AllBlocks = {};
@@ -55,18 +52,6 @@ function love.load( arg )
   SoundManager.LoadSounds();
 
 
-
-
-
-   --- Proving Grounds ---
-
-
-
-
-
-  -----------------------  
-
-  
 end
 
 
@@ -80,10 +65,6 @@ function love.update( dt )
   Board:Update( dt );
   
   CheckCollision();
-  
-  
-  print( "Position --> ", Ball:GetX(), Ball:GetY() );
-  print( "Direction --> ", Ball:GetXDirection(), Ball:GetYDirection() );
 end
 
 function love.draw()
@@ -100,21 +81,20 @@ function love.draw()
   love.graphics.setColor( 255, 255, 102 );
   love.graphics.rectangle( "fill", Board:GetX(), Board:GetY(), Board:GetWidth(), Board:GetHeight() );
   
+
   
-  for i = 1, #AllBlocks do
-    
-    if( AllBlocks[i] ~= nil ) then
-      -- Randomize color
-      R = love.math.random( 255 );
-      G = love.math.random( 255 );
-      B = love.math.random( 255 );
-      --love.graphics.setColor( R, G, B );
-      love.graphics.setColor( 255, 255, 255 );
-        
-      -- Place on screen as a 2D matrix 
-      love.graphics.draw( AllBlocks[i]:GetImage(), AllBlocks[i]:GetX(), AllBlocks[i]:GetY() );
-    end     
+  
+  for _, row in pairs( AllBlocks ) do
+    for _, block in pairs( row ) do
+      love.graphics.setColor( block:GetColor() );
+      love.graphics.draw( block:GetImage(), block:GetX(), block:GetY() ); 
+    end 
   end
+  
+  
+  -- Print FPS
+  love.graphics.setColor( 255, 255, 255 );
+  love.graphics.print( "FPS:" .. love.timer.getFPS(), love.graphics.getWidth() * 0.5 - 20, love.graphics.getHeight() * 0.5, 0, 1.5, 1.5  );
   
 end
 -------------------------------------------------
@@ -124,33 +104,116 @@ end
 
 function CheckCollision()
    
-  -- Iterate AllBlocks and check intersect with Ball
-  for i, block in pairs( AllBlocks ) do
+   ----------------------------------
+   -- Check Ball collision with walls
+   ----------------------------------
+   
+  
+   -- Only check collision with top wall if the upper
+   -- row of blocks has been breached
+   if( #AllBlocks > 9 ) then
+     
+     if( Ball:GetY() < 0 ) then
+       Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( 0, -1 ) ) );
+       -- SoundManager:PlaySound( "wall bounce " );
+     end
+   end
+   
+   
+   -- Bottom wall
+   if( Ball:GetY() > love.graphics.getHeight() ) then
+      love.event.quit();  -- Quit game
+   end
+   
+   
+   -- Left wall
+   if( Ball:GetX() < 0 ) then
+    Ball:SetX( 0 );
+    Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( 1, 0 ) ) );
+     -- SoundManager:PlaySound( "wall bounce " );
+   end
+   
+   -- Left wall
+   if( Ball:GetX() > love.graphics.getWidth()  ) then
+     Ball:SetX( love.graphics.getWidth() )
+    Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( -1, 0 ) ) );
+     -- SoundManager:PlaySound( "wall bounce " );
+   end
+   
+   
+   ----------------------------------
+   -- Check Ball collision with board
+   ----------------------------------
+      
+   if Ball:GetY() < Board:GetY() + Board:GetHeight() and
+      Ball:GetY() + Ball:GetRadius() > Board:GetY() and
+      Ball:GetX() < Board:GetX() + Board:GetWidth() and
+      Ball:GetX() + Ball:GetRadius() > Board:GetX() then
     
-    if( AllBlocks[i] ~= nil ) then
-    
-      if Ball:GetY() < block:GetY() + block:GetHeight() and
-         Ball:GetY() + Ball:GetRadius() * 4 > block:GetY() and
-         Ball:GetX() < block:GetX() + block:GetWidth() and
-         Ball:GetX() + Ball:GetRadius() * 4 > block:GetX() then
-         
-         -- We have a hit!
-         --block:ChangeState();
-         block:Impact( 1 );
-         
-         Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( 0, -1 ) ) );
-          
-          
-         -- Remove if Block is dead
---         if block:CheckDead() then     
---           table.remove( AllBlocks, i );
---         end
-          
---         newYDirection = Ball.GetYDirection() * (-1);
---         Ball.SetYDirection( newYDirection );
-      end      
+    Ball:SetY( Board:GetY() );
+    Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( 0, 1 ) ) );
+      
     end
-  end
+    
+    
+   
+   
+   -----------------------------------
+   -- Check Ball collision with blocks
+   ----------------------------------- 
+  local rowBelow  = 2;
+  local lastRow   = false;
+  
+  
+  for i = 1, #AllBlocks do
+      
+     -- Check if we're on the last row
+     if( rowBelow > #AllBlocks or #AllBlocks[rowBelow] == 0 ) then
+        rowBelow  = rowBelow - 1;
+        lastRow   = true;
+     end
+    
+     if( #AllBlocks[rowBelow] ~= 0 and #AllBlocks[rowBelow] ~= 9 or lastRow ) then
+       
+       for j, block in pairs( AllBlocks[i] ) do
+         
+         if( block ~= nil ) then
+           
+           block:SetColor( { 255, 255, 255 } );
+           if( Toggle_Debug ) then
+              block:SetColor( { 0, 255, 0 } ); -- Paint collision visible blocks green
+           end
+          
+           if( Ball:GetY() < block:GetY() + block:GetHeight() and
+            Ball:GetY() + Ball:GetRadius() * 4 > block:GetY() and
+            Ball:GetX() < block:GetX() + block:GetWidth() and
+            Ball:GetX() + Ball:GetRadius() * 4 > block:GetX() ) then
+           
+             -- We have a hit!
+             block:Impact( 1 );
+             
+             -- Remove block from collection
+             if( block:CheckDestroyed() ) then
+               print( "Destroy block in row: " .. i .. " and column: " .. j );
+               table.remove( AllBlocks[i], j );           
+             end
+             
+             -- Modify Ball
+             Ball:SetY( block:GetY() + block:GetHeight() );
+             Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( 0, -1 ) ) ); 
+             
+           end
+         end       
+       end
+     end
+     rowBelow = rowBelow + 1;
+   end
+ 
+  
+  
+  
+  
+  
 end
 
 function HandleInput()
@@ -168,6 +231,11 @@ function HandleInput()
   if love.keyboard.isDown( "escape" ) then
     love.event.quit( )
   end
+  
+  
+  
+  
+  
 
 end
 
@@ -176,5 +244,29 @@ function love.keypressed( key )
    if( key == "m" ) then
       SoundManager.ToggleSound();
    end
+   
+   if( key == "b" ) then
+     Board:SetWidth( 160 )
+   end
+   
+   if( key == "s" ) then
+     Board:SetWidth( 20 )
+   end
+   
+   if( key == "n" ) then
+     Board:SetWidth( 60 )
+   end
+   
+   if( key == "d" ) then
+     if( Toggle_Debug ) then
+       Toggle_Debug = false;
+       print( "Toggle_Debug = false" );
+     else
+       Toggle_Debug = true;
+       print( "Toggle_Debug = true" );
+     end
+   end
+   
+   
 
 end

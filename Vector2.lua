@@ -115,8 +115,6 @@ function Vector2:Reflect( surfaceNormalVector )
   
   reflectedVector =  self - Vector2:MulVecNum( ( self * surfaceNormalVector ) , 2 ) * surfaceNormalVector;
   
-  print( "HIT!  Direction Vector" );
-  
   return reflectedVector;
 end
 

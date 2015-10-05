@@ -8,7 +8,7 @@
 local SoundManager = {
   
   -- Fields
-  SoundTypes        = { "Background_music", "GlassBlock_Untouched", "GlassBlock_Damaged", "GlassBlock_Broken" };
+  SoundTypes        = { "Background_music", "GlassBlock_Damaged", "GlassBlock_Broken", "GlassBlock_Destroyed" };
   Sounds            = {};
   isSoundActivated  = false;
     

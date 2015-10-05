@@ -1,5 +1,6 @@
 local AssetManagerRef  = require( "AssetManager" );
-local Vector2           = require( "Vector2" );
+local SoundManagerRef  = require( "SoundManager" );
+local Vector2          = require( "Vector2" );
 AssetManagerRef:LoadAssets();
 
 -------------------------------------------------
@@ -28,7 +29,11 @@ Block = {
   current_state = nil;
 
   AssetManager  = AssetManagerRef;  -- Reference to AssetManager
-
+  SoundManager  = SoundManagerRef;  -- Reference to SoundManager
+  
+  
+  -- TEST FOR DEBUG
+  color = nil;
 };
 
 -- Constructor
@@ -87,6 +92,21 @@ end
 
 function Block:SetHeight( newHeight )
   self.height = newHeight;
+end
+
+function Block:CheckDestroyed()
+  --print( self.current_state );
+  return self.current_state == Block.BlockStates["Destroyed"];
+end
+
+
+function Block:GetColor()
+  return self.color;
+end
+
+
+function Block:SetColor( newColor )
+  self.color = newColor;
 end
 
 

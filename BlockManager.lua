@@ -29,38 +29,57 @@ function BlockManager:GenerateBlocks( block_pattern )
   print( "In BlockManager -> Filling BlockContainer..." );
   local  BlockContainer = {};
 
+
   local xStart = 6;   -- X start position on screen
   local yStart = 10;  -- Y start position on screen
   
-  local counter = 1;
+  local xOffset = 106;
+  local yOffset = 25;
+  
+  local xCoord = 0; 
+  local yCoord = 0;
+  
+  local row       = 1;
+  local counter   = 1;
+  local newBlock  = {};
+  
+  
+  --------------------------------------------------------------------
   for i = 1, 8 do
-    for j = 1, 9 do     
+    BlockContainer[i] = {};
+    for j = 1, 9 do
       
-      local xCoord = xStart + 106 * (j-1); -- Set X coordinate
-      local yCoord = yStart + 25 * (i-1);  -- Set Y coordinate
-      local pos = Vector2:New( xCoord, yCoord );
-      local newBlock = {};
-    
       -- No Block
-      if block_pattern[counter] == 0 then 
-        -- No block will created
-        BlockContainer[counter] = nil;
-
-
-      -- Create new GlassBlock
-      else if block_pattern[counter] == 1 then        
-        newBlock = GlassBlock:New( pos, 100, 20, 9, 3 );     
-        table.insert( BlockContainer, newBlock ); -- Add new Block to table
-          
-      end
-      end
-      
-      counter = counter + 1;
+      if block_pattern[counter] ~= 0 then 
+        
+        -- Calculate new block coordinates
+        xCoord = xStart + xOffset * (j-1);   -- X coordinate
+        yCoord = yStart + yOffset * (i-1);  --Y coordinate
+        
+        
+        -- Create new GlassBlock
+        if block_pattern[counter] == 1 then        
+          newBlock = GlassBlock:New( Vector2:New( xCoord, yCoord ), 100, 20, 3, 3 );     
+          table.insert( BlockContainer[i], newBlock ); -- Add new Block to table       
+        end
+        
+        -- Add other block types here!
+        
+     else
+      -- No block will created
+      BlockContainer[counter] = nil;
+     end  
+     
+     counter = counter + 1;
       
     end
   end
-   
-   print( "In BlockManager -> BlockContainer filled with: " .. #BlockContainer .. " blocks" );
+  
+  ------------------------------------------------------------------------
+
+  
+
+  print( "In BlockManager -> BlockContainer filled with: " .. #BlockContainer .. " blocks" );
   return BlockContainer; -- Return block table
   
 end

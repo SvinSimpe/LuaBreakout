@@ -36,11 +36,11 @@ function Ball:GetY()
 end
 
 function Ball:SetX( newX )
-	self.x = newX;
+	self.position:SetX( newX );
 end
 
 function Ball:SetY( newY )  
-	self.y = newY;
+	self.position:SetY( newY );
 end
 
 function Ball:GetXDirection()

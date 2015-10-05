@@ -23,8 +23,9 @@ function GlassBlock:New( newPosition, newWidth, newHeight, newMaxHealth, newNumS
     newGlassBlock.num_states      = newNumStates;
     newGlassBlock.change_factor   = newMaxHealth / newNumStates;
     
-    newGlassBlock.current_state = Block.BlockStates[Untouched];
+    newGlassBlock.current_state = Block.BlockStates["Untouched"];
     
+    newGlassBlock.color = { 255, 255, 255 };
     
     -- Methods
     function newGlassBlock:ChangeState( destroy )
@@ -35,21 +36,28 @@ function GlassBlock:New( newPosition, newWidth, newHeight, newMaxHealth, newNumS
         return;
       end
     
+
     
-      if( self.current_state == Block.BlockStates[Untouched] ) then
-        self.current_state = Block.BlockStates[Damaged];  -- Change block state
+    
+      if( self.current_state == Block.BlockStates["Untouched"] ) then
+        self.current_state = Block.BlockStates["Damaged"];  -- Change block state
         self.current_image = self.AssetManager:RequestAsset( "GlassBlock_Damaged" );  -- Change block image
-      
-      else if( self.current_state == Block.BlockStates[Damaged] ) then
-        self.current_state = Block.BlockStates[Broken];  -- Change block state
-        self.current_image = self.AssetManager:RequestAsset( "GlassBlock_Broken" );  -- Change block image
+        self.SoundManager.PlaySound( "GlassBlock_Damaged" );
         
-      else if( self.current_state == Block.BlockStates[Broken] ) then
-        self.current_state = Block.BlockStates[Destroyed];  -- Change block state
-        self = nil; -- TEST remove itself!
-      end
-      end
-      end
+  
+      elseif( self.current_state == Block.BlockStates["Damaged"] ) then
+        self.current_state = Block.BlockStates["Broken"];  -- Change block state
+        self.current_image = self.AssetManager:RequestAsset( "GlassBlock_Broken" );  -- Change block image
+        self.SoundManager.PlaySound( "GlassBlock_Broken" );
+        
+      elseif( self.current_state == Block.BlockStates["Broken"] ) then
+        self.current_state = Block.BlockStates["Destroyed"];  -- Change block state
+        self.SoundManager.PlaySound( "GlassBlock_Destroyed" );
+      
+      end 
+
+   
+      
 
      
     
@@ -57,16 +65,17 @@ function GlassBlock:New( newPosition, newWidth, newHeight, newMaxHealth, newNumS
 
     function newGlassBlock:Impact( ball_damage )
       
-      if( ball_damage >= self.max_health or self.current_health - ball_damage < 1 ) then
-        --Block will be destroyed
-        self:ChangeState( true );
-        return;
-      end
+--      if( ball_damage >= self.max_health or self.current_health - ball_damage < 1 ) then
+--        --Block will be destroyed
+--        self:ChangeState( true );
+--        return;
+--      end
       
       -- Remove ball damage on Block health
       self.current_health = self.current_health - ball_damage;
       
       if( self.current_health % self.change_factor == 0 ) then -- Change state
+        
         self:ChangeState();
       end
         
