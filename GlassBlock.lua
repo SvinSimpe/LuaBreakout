@@ -5,7 +5,7 @@ local Vector2       = require( "Vector2" );
 -------------------------------------------------
 ----- GlassBlock : public Block
 -------------------------------------------------
-local GlassBlock = Block:New();
+local GlassBlock = {};--Block:New();
  
 -- Constructor
 function GlassBlock:New( newPosition, newWidth, newHeight, newMaxHealth, newNumStates )

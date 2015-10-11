@@ -7,7 +7,7 @@
 -------------------------------------------------
 local AssetManager = {
   -- Fields
-  AssetTypes = { "Background_DesertNight", "GlassBlock_Untouched", "GlassBlock_Damaged", "GlassBlock_Broken" };
+  AssetTypes = { "Background_DesertNight", "GlassBlock_Untouched", "GlassBlock_Damaged", "GlassBlock_Broken", "Splash_Screen" };
   Assets     = {};
   
 };
@@ -27,10 +27,19 @@ function AssetManager:LoadAssets()
     -- Load GlassBlock assets
     print( "---------------------------------------------------------------" )
     print( "In AssetManager -> Loading GlassBlock assets..." );
-    self.Assets[2] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched.png" );
+    self.Assets[2] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched5.png" );
     self.Assets[3] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockDamaged.png" );
     self.Assets[4] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockBroken.png" );
     print( "In AssetManager -> Loading GlassBlock assets complete!" );
+    print( "---------------------------------------------------------------" )
+    
+    
+    
+    -- Load Splash Screen asset
+    print( "---------------------------------------------------------------" )
+    print( "In AssetManager -> Loading Splash Screen assets..." );
+    self.Assets[5] = love.graphics.newImage( "Art/Backgrounds/SplashScreen.png" );
+    print( "In AssetManager -> Loading Splash Screen assets complete!" );
     print( "---------------------------------------------------------------" )
 end
 

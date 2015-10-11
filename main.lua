@@ -1,4 +1,5 @@
 
+local StateManager  = require( "StateManager" );
 
 local BlockManager  = require( "BlockManager" );
 local AssetManager  = require( "AssetManager" );
@@ -11,12 +12,18 @@ local Ball          = require( "Ball" );
 
 local Toggle_Debug = false;
 
+
+
 -------------------------------------------------
 ----- Love2D
 -------------------------------------------------
 function love.load( arg )
 
-  if arg[#arg] == "-debug" then require("mobdebug").start() end
+if arg[#arg] == "-debug" then require("mobdebug").start() end
+
+
+  StateManager.Init();
+
 
   full_pattern = { 1, 1, 1, 1, 1, 1, 1, 1, 1,
                    1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -52,6 +59,7 @@ function love.load( arg )
   SoundManager.LoadSounds();
 
 
+
 end
 
 
@@ -60,6 +68,9 @@ function love.update( dt )
   HandleInput();
   
   SoundManager.Update( dt );
+  
+  StateManager.Update( dt );
+  
   
 	Ball:Update( dt );
   Board:Update( dt );
@@ -92,9 +103,15 @@ function love.draw()
   end
   
   
-  -- Print FPS
-  love.graphics.setColor( 255, 255, 255 );
-  love.graphics.print( "FPS:" .. love.timer.getFPS(), love.graphics.getWidth() * 0.5 - 20, love.graphics.getHeight() * 0.5, 0, 1.5, 1.5  );
+  if( Toggle_Debug ) then
+    -- Print FPS
+    love.graphics.setColor( 255, 255, 255 );
+    love.graphics.print( "FPS:" .. love.timer.getFPS(), love.graphics.getWidth() * 0.5 - 20, love.graphics.getHeight() * 0.5, 0, 1.5, 1.5  );
+  end
+  
+  
+  
+  StateManager.Draw();
   
 end
 -------------------------------------------------
@@ -208,12 +225,6 @@ function CheckCollision()
      end
      rowBelow = rowBelow + 1;
    end
- 
-  
-  
-  
-  
-  
 end
 
 function HandleInput()
@@ -234,8 +245,17 @@ function HandleInput()
   
   
   
+  --[[ 
   
+    Add a function to all States that handles input separately
+    but receives a 'key' from love.keypressed in main.lua.
+    
+    function love.keypressed( key )
+      StateMananager.current_state:HandleInput( key );
+    end  
+  ]]
   
+
 
 end
 
