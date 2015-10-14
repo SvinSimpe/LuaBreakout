@@ -95,6 +95,11 @@ function MenuState:Init()
   end
 
 
+  function newMenuState:HandleInput( key )
+  
+  end
+
+
   return newMenuState;
 
 end

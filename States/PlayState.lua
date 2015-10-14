@@ -36,12 +36,12 @@ function PlayState:Init()
   
   -- Init Board
   newPlayState.Board = BoardRef;
-  newPlayState.Board:Init( Vector2:New( 430, 550 ), 60, 10, 10 )
+  newPlayState.Board:Init( Vector2:New( 430, 550 ), 60, 10, 500 )
   
   -- Init Ball
   newPlayState.Ball = BallRef;
   newPlayState.Ball:Init( Vector2:New( newPlayState.Board:GetX() + newPlayState.Board:GetWidth() * 0.5, newPlayState.Board:GetY() - 10 ),
-             Vector2:New( math.cos( math.rad( 45 ) ), math.sin( math.rad( -45 ) ) ), 400, 5 );
+             Vector2:New( math.cos( math.rad( 45 ) ), math.sin( math.rad( -45 ) ) ), 40, 5 );
   
   
   
@@ -98,19 +98,7 @@ function PlayState:Init()
   
   function newPlayState:HandleInput()
   
-  -- Check LEFT key
-  if love.keyboard.isDown( "left" ) then
-      Board:MoveLeft();
-    -- Check RIGHT key  
-    else if love.keyboard.isDown( "right" ) then
-        Board:MoveRight(); 
-    end
-  end
   
-  -- Check ESC
-  if love.keyboard.isDown( "escape" ) then
-    love.event.quit( )
-  end
   
   
   
@@ -232,39 +220,38 @@ end
   
   
   
-  newPlayState.HandleInput = function()
-  
-  -- Check LEFT key
-  if love.keyboard.isDown( "left" ) then
-    newPlayState.Board:MoveLeft();
-  -- Check RIGHT key  
-  elseif love.keyboard.isDown( "right" ) then
-    newPlayState.Board:MoveRight(); 
-  end
-  
-  -- Check ESC
-  if love.keyboard.isDown( "escape" ) then
-    love.event.quit( )
-  end
-  
-  
-  
-  --[[ 
-  
-    Add a function to all States that handles input separately
-    but receives a 'key' from love.keypressed in main.lua.
+  function newPlayState:HandleInput( key )
     
-    function love.keypressed( key )
-      StateMananager.current_state:HandleInput( key );
-    end  
-  ]]
-  
-end
-  
-
-   
-   
---   newPlayState.KeyPressed = love.keypressed( key );
+    
+    if( key == "b" ) then
+       newPlayState.Board:SetWidth( 160 )
+     end
+     
+     if( key == "s" ) then
+       newPlayState.Board:SetWidth( 20 )
+     end
+     
+     if( key == "n" ) then
+       newPlayState.Board:SetWidth( 60 )
+     end
+    
+    
+    
+    
+    -- Check LEFT key
+    if love.keyboard.isDown( "left" ) then
+        newPlayState.Board:MoveLeft();
+      -- Check RIGHT key  
+      else if love.keyboard.isDown( "right" ) then
+          newPlayState.Board:MoveRight(); 
+      end
+    end
+    
+    -- Check ESC
+    if love.keyboard.isDown( "escape" ) then
+      love.event.quit( )
+    end
+  end
 
 
   

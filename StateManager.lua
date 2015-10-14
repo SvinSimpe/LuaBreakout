@@ -74,6 +74,13 @@ function StateManager.Draw()
   
 end
 
+function StateManager.HandleInput( key )
+  
+  StateManager.current_state:HandleInput( key );
+  
+end
+
+
 
 
 

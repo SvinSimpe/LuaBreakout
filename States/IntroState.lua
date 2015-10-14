@@ -104,7 +104,6 @@ function IntroState:Init()
       -- test
       StateManager.ChangeState( "MenuState" );
       
-      
     end
   end
   
@@ -125,6 +124,13 @@ function IntroState:Init()
       
     end
   end
+  
+  
+  function newIntroState:HandleInput( key )
+    
+  end
+  
+  
 
   return newIntroState;
 end

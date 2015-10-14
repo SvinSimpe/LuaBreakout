@@ -8,7 +8,7 @@
 local SoundManager = {
   
   -- Fields
-  SoundTypes        = { "Background_music", "GlassBlock_Damaged", "GlassBlock_Broken", "GlassBlock_Destroyed" };
+  SoundTypes        = { "Background_music", "GlassBlock_Damaged", "GlassBlock_Broken", "GlassBlock_Destroyed", "Board_Size_Increase", "Board_Size_Decrease" };
   Sounds            = {};
   isSoundActivated  = false;
     
@@ -33,6 +33,14 @@ function SoundManager.LoadSounds()
     SoundManager.Sounds[3] = love.audio.newSource( "Sound/Block Sounds/GlassBlock Sounds/GlassBlockBroken.wav" );
     SoundManager.Sounds[4] = love.audio.newSource( "Sound/Block Sounds/GlassBlock Sounds/GlassBlockDestroyed.wav" );
     print( "In SoundManager -> Loading GlassBlock sounds complete!" );
+    print( "---------------------------------------------------------------" )
+    
+    -- Load Board sounds
+    print( "---------------------------------------------------------------" )
+    print( "In SoundManager -> Loading Board sounds..." );
+    SoundManager.Sounds[5] = love.audio.newSource( "Sound/Board Sounds/maximize_board_sound.wav" );
+    SoundManager.Sounds[6] = love.audio.newSource( "Sound/Board Sounds/minimize_board_sound.wav" );
+    print( "In SoundManager -> Loading Board sounds complete!" );
     print( "---------------------------------------------------------------" )
     
 end

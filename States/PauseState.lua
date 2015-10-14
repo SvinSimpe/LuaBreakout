@@ -72,6 +72,14 @@ function PauseState:Init()
   end
   
   
+  
+  function newPauseState:HandleInput( key )
+    
+  end
+  
+  
+  
+  
   return newPauseState;
   
 end

@@ -33,11 +33,11 @@ if arg[#arg] == "-debug" then require("mobdebug").start() end
 end
 
 
-function love.update( dt )
+function love.update( deltaTime )
   
-  SoundManager.Update( dt );
+  SoundManager.Update( deltaTime );
   
-  StateManager.Update( dt );
+  StateManager.Update( deltaTime );
   
 end
 
@@ -49,7 +49,7 @@ end
 
    function love.keypressed( key )
      
-     --StateManager.HandleInput( key );
+     StateManager.HandleInput( key );
      
      
      
@@ -62,26 +62,26 @@ end
         SoundManager.ToggleSound();
      end
      
-     if( key == "b" ) then
-       newPlayState.Board:SetWidth( 160 )
-     end
+--     if( key == "b" ) then
+--       newPlayState.Board:SetWidth( 160 )
+--     end
      
-     if( key == "s" ) then
-       newPlayState.Board:SetWidth( 20 )
-     end
+--     if( key == "s" ) then
+--       newPlayState.Board:SetWidth( 20 )
+--     end
      
-     if( key == "n" ) then
-       newPlayState.Board:SetWidth( 60 )
-     end
+--     if( key == "n" ) then
+--       newPlayState.Board:SetWidth( 60 )
+--     end
      
-     if( key == "d" ) then
-       if( Toggle_Debug ) then
-         Toggle_Debug = false;
-         print( "Toggle_Debug = false" );
-       else
-         Toggle_Debug = true;
-         print( "Toggle_Debug = true" );
-       end
-     end
+--     if( key == "d" ) then
+--       if( Toggle_Debug ) then
+--         Toggle_Debug = false;
+--         print( "Toggle_Debug = false" );
+--       else
+--         Toggle_Debug = true;
+--         print( "Toggle_Debug = true" );
+--       end
+--     end
    end
 
