@@ -38,7 +38,7 @@ function AssetManager:LoadAssets()
     -- Load GlassBlock assets
     print( "---------------------------------------------------------------" )
     print( "In AssetManager -> Loading GlassBlock assets..." );
-    self.Assets[3] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched5.png" );
+    self.Assets[3] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched.png" );
     self.Assets[4] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockDamaged.png" );
     self.Assets[5] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockBroken.png" );
     print( "In AssetManager -> Loading GlassBlock assets complete!" );

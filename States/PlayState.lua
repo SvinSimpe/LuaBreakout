@@ -12,7 +12,7 @@ local Vector2       = require( "Vector2" );
 
 
 
-
+local Toggle_Debug = false;
 
 
 
@@ -39,9 +39,13 @@ function PlayState:Init()
   newPlayState.Board:Init( Vector2:New( 430, 550 ), 60, 10, 500 )
   
   -- Init Ball
+  local ballSpeed = 400;
+  
+  
+  
   newPlayState.Ball = BallRef;
   newPlayState.Ball:Init( Vector2:New( newPlayState.Board:GetX() + newPlayState.Board:GetWidth() * 0.5, newPlayState.Board:GetY() - 10 ),
-             Vector2:New( math.cos( math.rad( 45 ) ), math.sin( math.rad( -45 ) ) ), 40, 5 );
+             Vector2:New( math.cos( math.rad( 45 ) ), math.sin( math.rad( -45 ) ) ), ballSpeed, 5 );
   
   
   
@@ -96,16 +100,7 @@ function PlayState:Init()
   end
   
   
-  function newPlayState:HandleInput()
-  
-  
-  
-  
-  
-  
-  
 
-end
 
 
   
@@ -131,8 +126,7 @@ end
    
    -- Bottom wall
    if( Ball:GetY() > love.graphics.getHeight() ) then
-      --love.event.quit();  -- Quit game
-      StateManager.ChangeState( "PauseState", "PlayState" );
+      love.event.quit();  -- Quit game 
    end
    
    
@@ -235,6 +229,21 @@ end
        newPlayState.Board:SetWidth( 60 )
      end
     
+    if( key == "d" ) then
+       if( Toggle_Debug ) then
+         Toggle_Debug = false;
+         print( "Toggle_Debug = false" );
+       else
+         Toggle_Debug = true;
+         print( "Toggle_Debug = true" );
+       end
+     end
+     
+    if( key == "p" ) then
+      StateManager.ChangeState( "PauseState", "PlayState" );
+    end
+    
+    
     
     
     
@@ -245,11 +254,6 @@ end
       else if love.keyboard.isDown( "right" ) then
           newPlayState.Board:MoveRight(); 
       end
-    end
-    
-    -- Check ESC
-    if love.keyboard.isDown( "escape" ) then
-      love.event.quit( )
     end
   end
 

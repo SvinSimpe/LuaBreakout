@@ -8,7 +8,7 @@ local DropManager   = require( "DropManager" );
 local Vector2       = require( "Vector2" );
 
 
-local Toggle_Debug = false;
+
 
 
 
@@ -47,41 +47,19 @@ function love.draw()
   
 end
 
-   function love.keypressed( key )
+function love.keypressed( key )
      
-     StateManager.HandleInput( key );
-     
-     
+  StateManager.HandleInput( key );
      
      
+  if( key == "m" ) then
+     SoundManager.ToggleSound();
+  end
+  
+   -- TEMPORARY
+--  if( key == "escape" ) then
+--      love.event.quit( )
+--  end
      
-     
-     
-     
-     if( key == "m" ) then
-        SoundManager.ToggleSound();
-     end
-     
---     if( key == "b" ) then
---       newPlayState.Board:SetWidth( 160 )
---     end
-     
---     if( key == "s" ) then
---       newPlayState.Board:SetWidth( 20 )
---     end
-     
---     if( key == "n" ) then
---       newPlayState.Board:SetWidth( 60 )
---     end
-     
---     if( key == "d" ) then
---       if( Toggle_Debug ) then
---         Toggle_Debug = false;
---         print( "Toggle_Debug = false" );
---       else
---         Toggle_Debug = true;
---         print( "Toggle_Debug = true" );
---       end
---     end
-   end
+end
 

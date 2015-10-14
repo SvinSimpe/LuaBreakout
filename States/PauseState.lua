@@ -63,19 +63,45 @@ function PauseState:Init()
     if( newPauseState.fade_factor >= 1.0 ) then
       newPauseState.fade_factor = 1.0;
       newPauseState.isFadingIn = false;  
-      newPauseState.isFadingOut  = true;
+      newPauseState.isIdle     = true;
     end
   end
 
   function newPauseState:FadeOut( deltaTime )
+    -- Increment fade factor
+    newPauseState.fade_factor = newPauseState.fade_factor - deltaTime * newPauseState.fade_speed;
   
+    -- If fading is complete
+    if( newPauseState.fade_factor <= 0.0 ) then
+      newPauseState.fade_factor = 0.0; 
+      newPauseState.isFadingOut  = false;
+      newPauseState:ResetState();
+      StateManager.ChangeState( "PlayState", "PauseState" );
+    end
   end
   
   
   
   function newPauseState:HandleInput( key )
     
+    -- Return to PlayState
+    if( ( key == "escape" or key == "p" ) and newPauseState.isIdle ) then
+      newPauseState.isFadingOut = true;
+    end 
   end
+  
+  function newPauseState:ResetState()
+    
+    -- Reset Fields
+    newPauseState.fade_speed  = 8.0; -- Fade duration
+    newPauseState.fade_factor = 0.0; -- Fade factor starts at 0 to generate black screen
+
+    newPauseState.isFadingIn  = true;
+    newPauseState.isIdle      = false;
+    newPauseState.isFadingOut = false; 
+    
+  end
+  
   
   
   
