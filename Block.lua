@@ -1,7 +1,7 @@
 local AssetManagerRef  = require( "AssetManager" );
 local SoundManagerRef  = require( "SoundManager" );
 local Vector2          = require( "Vector2" );
-AssetManagerRef:LoadAssets();
+--AssetManagerRef:LoadAssets();
 
 -------------------------------------------------
 ----- Block

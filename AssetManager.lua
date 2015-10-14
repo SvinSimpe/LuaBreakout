@@ -7,7 +7,10 @@
 -------------------------------------------------
 local AssetManager = {
   -- Fields
-  AssetTypes = { "Background_DesertNight", "GlassBlock_Untouched", "GlassBlock_Damaged", "GlassBlock_Broken", "Splash_Screen" };
+  AssetTypes = { "Background_DesertNight", "Background_MenuScreen",
+                 "GlassBlock_Untouched", "GlassBlock_Damaged", "GlassBlock_Broken",
+                 "Splash_Screen",
+                 "Pause_Screen" };
   Assets     = {};
   
 };
@@ -23,13 +26,21 @@ function AssetManager:LoadAssets()
     print( "---------------------------------------------------------------" )
     
     
+    -- Load Menu assets
+    print( "---------------------------------------------------------------" )
+    print( "In AssetManager -> Loading Menu assets..." );
+    self.Assets[2] = love.graphics.newImage( "Art/Backgrounds/MenuScreen.png" );
+    print( "In AssetManager -> Loading Menu assets complete!" );
+    print( "---------------------------------------------------------------" )
+    
+    
     
     -- Load GlassBlock assets
     print( "---------------------------------------------------------------" )
     print( "In AssetManager -> Loading GlassBlock assets..." );
-    self.Assets[2] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched5.png" );
-    self.Assets[3] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockDamaged.png" );
-    self.Assets[4] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockBroken.png" );
+    self.Assets[3] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockUntouched5.png" );
+    self.Assets[4] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockDamaged.png" );
+    self.Assets[5] = love.graphics.newImage( "Art/Blocks/GlassBlock/Image/GlassBlockBroken.png" );
     print( "In AssetManager -> Loading GlassBlock assets complete!" );
     print( "---------------------------------------------------------------" )
     
@@ -38,8 +49,17 @@ function AssetManager:LoadAssets()
     -- Load Splash Screen asset
     print( "---------------------------------------------------------------" )
     print( "In AssetManager -> Loading Splash Screen assets..." );
-    self.Assets[5] = love.graphics.newImage( "Art/Backgrounds/SplashScreen.png" );
+    self.Assets[6] = love.graphics.newImage( "Art/Backgrounds/SplashScreen.png" );
     print( "In AssetManager -> Loading Splash Screen assets complete!" );
+    print( "---------------------------------------------------------------" )
+    
+    
+
+    -- Load Pause Screen asset
+    print( "---------------------------------------------------------------" )
+    print( "In AssetManager -> Loading Pause Screen assets..." );
+    self.Assets[7] = love.graphics.newImage( "Art/Backgrounds/PauseScreen.png" );
+    print( "In AssetManager -> Loading Pause Screen assets complete!" );
     print( "---------------------------------------------------------------" )
 end
 

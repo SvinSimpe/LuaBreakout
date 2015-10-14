@@ -1,6 +1,6 @@
 local AssetManagerRef = require( "AssetManager" );
 local SoundManagerRef = require( "SoundManager" );
-local Entry           = require( "Entry" );
+local Entry           = require( "States/Entry" );
 
 -------------------------------------------------
 ----- BaseState

@@ -4,18 +4,23 @@ local Pattern_Full = require( "Pattern_Full" );
 
 
 -- Components ---
-local BaseState     = require( "BaseState" );
+local BaseState     = require( "States/BaseState" );
 local BlockManager  = require( "BlockManager" );
-local Board         = require( "Board" );
-local Ball          = require( "Ball" );
+local BoardRef      = require( "Board" );
+local BallRef       = require( "Ball" );
+local Vector2       = require( "Vector2" );
 
 
 
-----------------------
+
+
+
 
 local PlayState = {
   
   BlockContainer = nil;
+  Board          = nil;
+  Ball           = nil;
   
   };
 
@@ -29,16 +34,65 @@ function PlayState:Init()
   -- Fill 'BlockContainer' according to requested pattern
   newPlayState.BlockContainer = BlockManager:GenerateBlocks( Pattern_Full );
   
+  -- Init Board
+  newPlayState.Board = BoardRef;
+  newPlayState.Board:Init( Vector2:New( 430, 550 ), 60, 10, 10 )
+  
+  -- Init Ball
+  newPlayState.Ball = BallRef;
+  newPlayState.Ball:Init( Vector2:New( newPlayState.Board:GetX() + newPlayState.Board:GetWidth() * 0.5, newPlayState.Board:GetY() - 10 ),
+             Vector2:New( math.cos( math.rad( 45 ) ), math.sin( math.rad( -45 ) ) ), 400, 5 );
+  
+  
+  
+  
   
   
   -- Methods
   
   function newPlayState:Update( deltaTime )
+    
+    self.HandleInput();
+    
     self.CheckCollision();
+    
+    Ball:Update( deltaTime );
+    newPlayState.Board:Update( deltaTime );
+    
   end
 
   function newPlayState:Draw()
-  
+    
+    -- Draw Background
+    love.graphics.setColor( 255, 255, 255 );
+    love.graphics.draw( self.AssetManager:RequestAsset( "Background_DesertNight" ) );
+    
+    -- Draw Ball
+    love.graphics.setColor( 51, 204, 255 );
+    love.graphics.circle( "fill", Ball:GetX(), Ball:GetY(), Ball:GetRadius(), 100 ); -- Draw light blue circle with 100 segments.
+    
+    -- Draw Board
+    love.graphics.setColor( 255, 255, 102 );
+    love.graphics.rectangle( "fill", newPlayState.Board:GetX(), newPlayState.Board:GetY(), newPlayState.Board:GetWidth(), newPlayState.Board:GetHeight() );
+    
+
+    
+    
+    for _, row in pairs( newPlayState.BlockContainer ) do
+      for _, block in pairs( row ) do
+        love.graphics.setColor( block:GetColor() );
+        love.graphics.draw( block:GetImage(), block:GetX(), block:GetY() ); 
+      end 
+    end
+    
+    
+    if( Toggle_Debug ) then
+      -- Print FPS
+      love.graphics.setColor( 255, 255, 255 );
+      love.graphics.print( "FPS:" .. love.timer.getFPS(), love.graphics.getWidth() * 0.5 - 20, love.graphics.getHeight() * 0.5, 0, 1.5, 1.5  );
+    end
+    
+    
   end
   
   
@@ -78,7 +132,7 @@ end
   
    -- Only check collision with top wall if the upper
    -- row of blocks has been breached
-   if( #AllBlocks > 9 ) then
+   if( #newPlayState.BlockContainer > 9 ) then
      
      if( Ball:GetY() < 0 ) then
        Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( 0, -1 ) ) );
@@ -89,7 +143,8 @@ end
    
    -- Bottom wall
    if( Ball:GetY() > love.graphics.getHeight() ) then
-      love.event.quit();  -- Quit game
+      --love.event.quit();  -- Quit game
+      StateManager.ChangeState( "PauseState", "PlayState" );
    end
    
    
@@ -112,18 +167,15 @@ end
    -- Check Ball collision with board
    ----------------------------------
       
-   if Ball:GetY() < Board:GetY() + Board:GetHeight() and
-      Ball:GetY() + Ball:GetRadius() > Board:GetY() and
-      Ball:GetX() < Board:GetX() + Board:GetWidth() and
-      Ball:GetX() + Ball:GetRadius() > Board:GetX() then
+   if Ball:GetY() < newPlayState.Board:GetY() + newPlayState.Board:GetHeight() and
+      Ball:GetY() + Ball:GetRadius() > newPlayState.Board:GetY() and
+      Ball:GetX() < newPlayState.Board:GetX() + newPlayState.Board:GetWidth() and
+      Ball:GetX() + Ball:GetRadius() > newPlayState.Board:GetX() then
     
-    Ball:SetY( Board:GetY() );
-    Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( 0, 1 ) ) );
-      
+    Ball:SetY( newPlayState.Board:GetY() - 10 );
+    Ball:SetDirection( Vector2:New( Ball:GetXDirection(), Ball:GetYDirection() ):Reflect( Vector2:New( 0, 1 ) ) ); 
     end
     
-    
-   
    
    -----------------------------------
    -- Check Ball collision with blocks
@@ -132,17 +184,17 @@ end
   local lastRow   = false;
   
   
-  for i = 1, #AllBlocks do
+  for i = 1, #newPlayState.BlockContainer do
       
      -- Check if we're on the last row
-     if( rowBelow > #AllBlocks or #AllBlocks[rowBelow] == 0 ) then
+     if( rowBelow > #newPlayState.BlockContainer or #newPlayState.BlockContainer[rowBelow] == 0 ) then
         rowBelow  = rowBelow - 1;
         lastRow   = true;
      end
     
-     if( #AllBlocks[rowBelow] ~= 0 and #AllBlocks[rowBelow] ~= 9 or lastRow ) then
+     if( #newPlayState.BlockContainer[rowBelow] ~= 0 and #newPlayState.BlockContainer[rowBelow] ~= 9 or lastRow ) then
        
-       for j, block in pairs( AllBlocks[i] ) do
+       for j, block in pairs( newPlayState.BlockContainer[i] ) do
          
          if( block ~= nil ) then
            
@@ -162,7 +214,7 @@ end
              -- Remove block from collection
              if( block:CheckDestroyed() ) then
                print( "Destroy block in row: " .. i .. " and column: " .. j );
-               table.remove( AllBlocks[i], j );           
+               table.remove( newPlayState.BlockContainer[i], j );           
              end
              
              -- Modify Ball
@@ -180,14 +232,56 @@ end
   
   
   
+  newPlayState.HandleInput = function()
+  
+  -- Check LEFT key
+  if love.keyboard.isDown( "left" ) then
+    newPlayState.Board:MoveLeft();
+  -- Check RIGHT key  
+  elseif love.keyboard.isDown( "right" ) then
+    newPlayState.Board:MoveRight(); 
+  end
+  
+  -- Check ESC
+  if love.keyboard.isDown( "escape" ) then
+    love.event.quit( )
+  end
+  
+  
+  
+  --[[ 
+  
+    Add a function to all States that handles input separately
+    but receives a 'key' from love.keypressed in main.lua.
+    
+    function love.keypressed( key )
+      StateMananager.current_state:HandleInput( key );
+    end  
+  ]]
+  
+end
+  
+
+   
+   
+--   newPlayState.KeyPressed = love.keypressed( key );
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
   
 
   -- Returns the new PlayState
   return newPlayState;
-  
 end
-
-
 
 
 
