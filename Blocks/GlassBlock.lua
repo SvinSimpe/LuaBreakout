@@ -1,5 +1,5 @@
 
-local Block         = require("Block")
+local Block         = require("Blocks/Block")
 local Vector2       = require( "Vector2" );
 
 -------------------------------------------------
@@ -12,7 +12,7 @@ function GlassBlock:New( newPosition, newWidth, newHeight, newMaxHealth, newNumS
     
     local newGlassBlock = Block:New();
 
-    setmetatable( newGlassBlock, Block ); -- TEST
+    setmetatable( newGlassBlock, Block );
   
     newGlassBlock.position        = newPosition;
     newGlassBlock.width           = newWidth;
@@ -26,7 +26,7 @@ function GlassBlock:New( newPosition, newWidth, newHeight, newMaxHealth, newNumS
     newGlassBlock.current_state = Block.BlockStates["Untouched"];
     
     newGlassBlock.color = { 255, 255, 255 };
-    
+   
     -- Methods
     function newGlassBlock:ChangeState( destroy )
   
@@ -37,8 +37,6 @@ function GlassBlock:New( newPosition, newWidth, newHeight, newMaxHealth, newNumS
       end
     
 
-    
-    
       if( self.current_state == Block.BlockStates["Untouched"] ) then
         self.current_state = Block.BlockStates["Damaged"];  -- Change block state
         self.current_image = self.AssetManager:RequestAsset( "GlassBlock_Damaged" );  -- Change block image

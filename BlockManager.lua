@@ -1,4 +1,5 @@
-local GlassBlock = require( "GlassBlock" );
+local GlassBlock = require( "Blocks/GlassBlock" );
+local BrickBlock = require( "Blocks/BrickBlock" );
 local Vector2    = require( "Vector2" );
 
 
@@ -61,7 +62,14 @@ function BlockManager:GenerateBlocks( block_pattern )
         if block_pattern[counter] == 1 then        
           newBlock = GlassBlock:New( Vector2:New( xCoord, yCoord ), 100, 20, 3, 3 );     
           table.insert( BlockContainer[i], newBlock ); -- Add new Block to table       
+        
+        -- Create new GlassBlock
+        elseif block_pattern[counter] == 2 then        
+          newBlock = BrickBlock:New( Vector2:New( xCoord, yCoord ), 100, 20, 9, 3 );     
+          table.insert( BlockContainer[i], newBlock ); -- Add new Block to table       
         end
+        
+        
         
         -- Add other block types here!
         

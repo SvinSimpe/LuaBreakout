@@ -23,5 +23,13 @@ function BaseState:New()
 
 end
 
+function BaseState:HandleKeyboardInput( key )
+end
+
+function BaseState:HandleMouseInput( mouseX, mouseY, mouseButton )  
+end
+
+
+
 
 return BaseState;

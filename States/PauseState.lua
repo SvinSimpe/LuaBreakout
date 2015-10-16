@@ -82,7 +82,7 @@ function PauseState:Init()
   
   
   
-  function newPauseState:HandleInput( key )
+  function newPauseState:HandleKeyboardInput( key )
     
     -- Return to PlayState
     if( ( key == "escape" or key == "p" ) and newPauseState.isIdle ) then

@@ -9,7 +9,11 @@ local Vector2       = require( "Vector2" );
 
 
 
-
+Color = {
+  
+  White = { R = 255, G = 255, B = 255 };
+  
+  };
 
 
 -------------------------------------------------
@@ -49,17 +53,21 @@ end
 
 function love.keypressed( key )
      
-  StateManager.HandleInput( key );
-     
      
   if( key == "m" ) then
      SoundManager.ToggleSound();
   end
-  
-   -- TEMPORARY
---  if( key == "escape" ) then
---      love.event.quit( )
---  end
      
+  StateManager.HandleKeyboardInput( key );
+     
+
 end
 
+     
+     
+     
+  function love.mousepressed( x, y, mouseButton )
+    
+    StateManager.HandleMouseInput( x, y, mouseButton );
+    
+  end

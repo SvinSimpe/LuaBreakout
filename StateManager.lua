@@ -74,9 +74,17 @@ function StateManager.Draw()
   
 end
 
-function StateManager.HandleInput( key )
+
+
+function StateManager.HandleKeyboardInput( key )
   
-  StateManager.current_state:HandleInput( key );
+  StateManager.current_state:HandleKeyboardInput( key );
+  
+end
+
+function StateManager.HandleMouseInput( mouseX, mouseY, mouseButton )
+  
+  StateManager.current_state:HandleMouseInput( mouseX, mouseY, mouseButton ); 
   
 end
 

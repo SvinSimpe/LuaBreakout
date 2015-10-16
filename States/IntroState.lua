@@ -126,9 +126,6 @@ function IntroState:Init()
   end
   
   
-  function newIntroState:HandleInput( key )
-    
-  end
   
   
 

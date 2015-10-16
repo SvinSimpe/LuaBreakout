@@ -30,6 +30,7 @@ function PlayState:Init()
   newPlayState = BaseState:New();
   
   setmetatable( newPlayState, BaseState );
+
   
   -- Fill 'BlockContainer' according to requested pattern
   newPlayState.BlockContainer = BlockManager:GenerateBlocks( Pattern_Full );
@@ -40,6 +41,7 @@ function PlayState:Init()
   
   -- Init Ball
   local ballSpeed = 400;
+  
   
   
   
@@ -56,8 +58,8 @@ function PlayState:Init()
   
   function newPlayState:Update( deltaTime )
     
-    self.HandleInput();
     
+    self.HandleStaticKeyInput();
     self.CheckCollision();
     
     Ball:Update( deltaTime );
@@ -95,6 +97,12 @@ function PlayState:Init()
       love.graphics.setColor( 255, 255, 255 );
       love.graphics.print( "FPS:" .. love.timer.getFPS(), love.graphics.getWidth() * 0.5 - 20, love.graphics.getHeight() * 0.5, 0, 1.5, 1.5  );
     end
+    
+    
+    local font = love.graphics.newFont("atari full.ttf", 15)
+    love.graphics.setFont( font );
+    love.graphics.print( "Hej", 400, 400 );
+    
     
     
   end
@@ -212,10 +220,12 @@ function PlayState:Init()
 end
   
   
-  
-  
-  function newPlayState:HandleInput( key )
+
+
+
+  function newPlayState:HandleKeyboardInput( key )
     
+    print( "In Playtate:HandleKeyBoardInput( key ) -->" .. key );
     
     if( key == "b" ) then
        newPlayState.Board:SetWidth( 160 )
@@ -243,10 +253,17 @@ end
       StateManager.ChangeState( "PauseState", "PlayState" );
     end
     
+    if( key == "escape" ) then
+      love.event.quit();
+    end
+    
+  end
+
+  
+  
     
     
-    
-    
+  function newPlayState:HandleStaticKeyInput()
     -- Check LEFT key
     if love.keyboard.isDown( "left" ) then
         newPlayState.Board:MoveLeft();
@@ -258,14 +275,6 @@ end
   end
 
 
-  
-  
-  
-  
-  
-  
-  
-  
 
   
   

@@ -1,5 +1,6 @@
 
 local Vector2 = require( "Vector2" );
+local AssetManager = require( "AssetManager" );
 
 
 local Entry = {
@@ -14,36 +15,64 @@ local Entry = {
 
 function Entry:New( newPosition, newWidth, newHeight, newLabel, newImage )
   
-  self.position = newPosition;
-  self.label    = newLabel;
-  self.image    = newImage;
+  newEntry = {};
+  
+  setmetatable( newEntry, self );
+  
+  newEntry.position = newPosition;
+  newEntry.width    = newWidth;
+  newEntry.height   = newHeight;
+  newEntry.label    = newLabel;
+  newEntry.image    = newImage;
+  
+  
+  
+  function newEntry:GetX()
+  return self.position:GetX();
+  end
+
+  function newEntry:GetY()
+    return self.position:GetY();
+  end
+
+  function newEntry:SetX( newX )
+    self.position:SetX( newX )
+  end
+
+  function newEntry:SetY( newY )
+    self.position:SetY( newY )
+  end
+
+  function newEntry:GetLabel()
+    return self.label;
+  end
+
+  function newEntry:SetLabel( newLabel )
+    self.label = newLabel;
+  end
+  
+  function newEntry:Draw( color )
+  
+    love.graphics.setColor( color );
+    love.graphics.draw( AssetManager:RequestAsset( self.image ), self.position:GetX(), self.position:GetY() );
+  
+  end
+
+  function newEntry:GetWidth()
+    return self.width;
+  end
+  
+  function newEntry:GetHeight()
+    return self.height;
+  end
+  
+  
+  return newEntry;
   
 end
 
 
-function Entry:GetX()
-  return self.position:GetX();
-end
 
-function Entry:GetY()
-  return self.position:GetY();
-end
-
-function Entry:SetX( newX )
-  self.position:SetX( newX )
-end
-
-function Entry:SetY( newY )
-  self.position:SetY( newY )
-end
-
-function Entry:GetLabel()
-  return self.label;
-end
-
-function Entry:SetLabel( newLabel )
-  self.label = newLabel;
-end
 
 
 
